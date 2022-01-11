@@ -2,6 +2,13 @@ import logo from './logo.svg';
 import './App.css';
 import { useState } from "react";
 import {
+  addTodo,
+  getTodo,
+  updateTodo,
+  deleteTodo,
+} from "./store/actions/todoActions";
+import { useDispatch, useSelector } from "react-redux";
+import {
   Input,
   Button,
   Col,
@@ -17,11 +24,11 @@ import {
 
 function App() {
   const [title, setTitle] = useState("");
-  const [list, setList] = useState([]);
-  const [arrayIndex, setArrayIndex] = useState("");
+  const [id, setId] = useState("");
   const [editModal, setEdit] = useState(false);
   const [deleteModal, setDelete] = useState(false);
-
+  const dispatch = useDispatch();
+  const { list } = useSelector((state) => state.todos);
   const editToggle = () => {
     setEdit(!editModal);
   };
@@ -31,18 +38,20 @@ function App() {
   };
   const handleAdd = () => {
     let obj = { title };
-    setList([...list, obj]);
+    // setList([...list, obj]);
+    dispatch(addTodo(obj));
     setTitle("");
   };
   const handleEdit = (idx) => {
-    let newTodo = list;
-    newTodo[idx].title = title;
-    setList(newTodo);
+    // let newTodo = list;
+    // newTodo[idx].title = title;
+    dispatch(updateTodo(id, title));
     setTitle("");
     editToggle();
   };
   const handleDelete = (idx) => {
-    list.splice(idx, 1);
+    // list.splice(idx, 1);
+    dispatch(deleteTodo(idx));
     deleteToggle();
   };
   return (
@@ -80,7 +89,7 @@ function App() {
                   <h4>{a.title}</h4>
                   <Button
                     onClick={() => {
-                      setArrayIndex(index);
+                      setId(a.id);
                       setTitle(a.title);
                       editToggle();
                     }}
@@ -90,7 +99,7 @@ function App() {
                   <Button
                     color="danger"
                     onClick={() => {
-                      setArrayIndex(index);
+                      setId(a.id);
                       deleteToggle();
                     }}
                   >
@@ -108,7 +117,7 @@ function App() {
           <Form
             onSubmit={(e) => {
               e.preventDefault();
-              handleEdit(arrayIndex);
+              handleEdit(id);
             }}
           >
             <Input
@@ -129,7 +138,7 @@ function App() {
           <div>Are you sure you want to Delete?</div>
           <Button
             onClick={() => {
-              handleDelete(arrayIndex);
+              handleDelete(id);
             }}
           >
             Delete
