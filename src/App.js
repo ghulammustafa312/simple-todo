@@ -1,6 +1,6 @@
-import logo from './logo.svg';
-import './App.css';
-import { useState } from "react";
+// import logo from './logo.svg';
+import "./App.css";
+import { useState, useEffect } from "react";
 import {
   addTodo,
   getTodo,
@@ -54,6 +54,9 @@ function App() {
     dispatch(deleteTodo(idx));
     deleteToggle();
   };
+  useEffect(() => {
+    dispatch(getTodo());
+  }, [dispatch]);
   return (
     <Container className="my-4">
       <Form
